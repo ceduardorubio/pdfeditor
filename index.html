@@ -45,7 +45,6 @@
             color: #fff;
             background-color: #0069d9;
             border-color: #0062cc;
-
             display: block;
             width: 100%;
         }
@@ -162,6 +161,9 @@
                     <div class="col">
                         <label for="input_pdf">Seleccionar Documento de Pdf:</label>
                         <input id="input_pdf" class="form-control m-5" type="file" />
+                        <h5>
+                            [para unir varios archivos pdfs, ingresa uno despues de otro]
+                        </h5>
                     </div>
                     <div class="col"></div>
                     <div class="col"></div>
@@ -250,7 +252,7 @@
 
                 <div class="row" style="padding-top: 6rem;">
                     <div class="col">
-                        <button onclick="Save()">Descargar PDF con Firma(s)</button>
+                        <button onclick="Save()">Descargar PDF unido con Firma(s)</button>
                     </div>
                     <div class="col">
 
@@ -359,11 +361,13 @@
         }
     }
 
-    function AppendPDFBytes(pdfBytes){
-        if(existingPdfBytes){
+    async function AppendPDFBytes(pdfBytes) {
+        if (existingPdfBytes) {
             const newPDF = await PDFDocument.load(pdfBytes);
             const copiedPagesA = await pdfDoc.copyPages(newPDF, newPDF.getPageIndices());
             copiedPagesA.forEach((page) => pdfDoc.addPage(page));
+            existingPdfBytes = await pdfDoc.save();
+
         } else {
             existingPdfBytes = pdfBytes;
         }
@@ -373,7 +377,7 @@
         var reader = new FileReader();
         reader.onload = async function() {
             let newPdfBytes = new Uint8Array(reader.result);
-            AppendPDFBytes(newPdfBytes);
+            await AppendPDFBytes(newPdfBytes);
             await embedImages();
         }
         reader.readAsArrayBuffer(this.files[0]);
