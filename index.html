@@ -18,6 +18,12 @@
         .h-90 {
             height: 98vh;
         }
+
+        .form-control{
+            width: 100%;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,0.4);
+        }
     </style>
 </head>
 
@@ -25,7 +31,7 @@
     <div class="row">
         <div class="col-50">
             <label for="input_pdf">Seleccionar Documento de Pdf:</label>
-            <input id="input_pdf" type="file" />
+            <input id="input_pdf" class="form-control" type="file" />
             <br>
             <label for="input_png">Seleccionar Firma PNG:</label>
             <input id="input_png" type="file" />
