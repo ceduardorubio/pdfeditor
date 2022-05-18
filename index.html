@@ -359,10 +359,21 @@
         }
     }
 
+    function AppendPDFBytes(pdfBytes){
+        if(existingPdfBytes){
+            const newPDF = await PDFDocument.load(pdfBytes);
+            const copiedPagesA = await pdfDoc.copyPages(newPDF, newPDF.getPageIndices());
+            copiedPagesA.forEach((page) => pdfDoc.addPage(page));
+        } else {
+            existingPdfBytes = pdfBytes;
+        }
+    }
+
     document.getElementById('input_pdf').addEventListener('change', function() {
         var reader = new FileReader();
         reader.onload = async function() {
-            existingPdfBytes = new Uint8Array(reader.result);
+            let newPdfBytes = new Uint8Array(reader.result);
+            AppendPDFBytes(newPdfBytes);
             await embedImages();
         }
         reader.readAsArrayBuffer(this.files[0]);
