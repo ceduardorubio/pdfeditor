@@ -1,0 +1,203 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+    <style>
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .col-50 {
+            flex: 50%;
+        }
+        
+        .h-90 {
+            height: 98vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-50">
+            <label for="input_pdf">Seleccionar Documento de Pdf:</label>
+            <input id="input_pdf" type="file" />
+            <br>
+            <label for="input_png">Seleccionar Firma PNG:</label>
+            <input id="input_png" type="file" />
+
+            <br>
+            <button onclick="AgregarFirma()">Agregar Firma</button>
+
+            <br>
+            <button onclick="IncrementarPagina()">Mover Firma a Pagina Siguiente</button>
+            <button onclick="DisminuirPagina()">Mover Firma a Pagina Previa</button>
+
+            <br>
+            <button onclick="AgrandarFirma()">Agrandar Firma</button>
+            <button onclick="AchicarFirma()">Achicar Firma</button>
+
+            <br>
+            <button onclick="MoverDerecha()">Mover Firma a la derecha</button>
+            <br>
+            <button onclick="MoverIzquierda()">Mover Firma a la izquierda</button>
+            <br>
+            <button onclick="MoverArriba()">Mover Firma hacia arriba</button>
+            <br>
+            <button onclick="MoverAbajo()">Mover Firma hacia abajo</button>
+
+            <br>
+            <button onclick="SetFirma()">Fijar Firma</button>
+
+            <br>
+            <button onclick="Save()">Descargar Firma PDF</button>
+        </div>
+        <div class="col-50 ">
+            <iframe style="box-sizing: border-box; width: 100%" class="h-90 "></iframe>
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    let pdfBytes = null;
+    const {
+        PDFDocument
+    } = PDFLib
+
+    let pdfDoc = null;
+    let pngImage = null;
+
+    let existingPdfBytes = null;
+    let pngImageBytes = null;
+
+    let width = 200;
+    let height = 200;
+
+    let firmando = false;
+
+    let x1 = 90;
+    let y1 = 190;
+
+    let page1 = 0;
+
+    async function AgregarFirma() {
+        firmando = true;
+        x1 = 90;
+        y1 = 190;
+        page1 = 0;
+        await embedImages();
+    }
+
+    async function IncrementarPagina() {
+        page1++;
+        await embedImages();
+    }
+
+    async function DisminuirPagina() {
+        if (page1 > 0) page1--;
+        await embedImages();
+    }
+
+    async function AchicarFirma() {
+        width = width - 30;
+        await embedImages();
+    }
+
+    async function AgrandarFirma() {
+        width = width + 30;
+        await embedImages();
+    }
+
+    async function MoverAbajo() {
+        y1 = y1 - 30;
+        await embedImages();
+    }
+
+    async function MoverArriba() {
+        y1 = y1 + 30;
+        await embedImages();
+    }
+
+    async function MoverDerecha() {
+        x1 = x1 + 30;
+        await embedImages();
+    }
+
+    async function MoverIzquierda() {
+        x1 = x1 - 30;
+        await embedImages();
+    }
+
+
+    async function ResetContents() {
+        pdfDoc = await PDFDocument.load(existingPdfBytes);
+        if (pngImageBytes) {
+            pngImage = await pdfDoc.embedPng(pngImageBytes);
+            const pngDims = pngImage.scale(1);
+            let factor = width / pngDims.width;
+            height = pngDims.height * factor;
+        }
+    }
+
+    document.getElementById('input_pdf').addEventListener('change', function() {
+        var reader = new FileReader();
+        reader.onload = async function() {
+            existingPdfBytes = new Uint8Array(reader.result);
+            await embedImages();
+        }
+        reader.readAsArrayBuffer(this.files[0]);
+    }, false);
+
+    document.getElementById('input_png').addEventListener('change', function() {
+        var reader = new FileReader();
+        reader.onload = async function() {
+            pngImageBytes = new Uint8Array(reader.result);
+        }
+        reader.readAsArrayBuffer(this.files[0]);
+    }, false);
+
+    async function embedImages() {
+        await ResetContents();
+        DrawOnPage(page1, x1, y1);
+        await UpdateViewer();
+    }
+
+
+    function DrawOnPage(page, x, y) {
+        if (pngImageBytes) {
+            pdfDoc.getPages()[page].drawImage(pngImage, {
+                x,
+                y,
+                width,
+                height
+            });
+        }
+    }
+
+    async function UpdateViewer() {
+        const pdfDataUri = await pdfDoc.saveAsBase64({
+            dataUri: true
+        });
+        var iframe = document.querySelectorAll('iframe')[0];
+        iframe.src = pdfDataUri;
+    }
+
+    async function SetFirma() {
+        firmando = false;
+        existingPdfBytes = await pdfDoc.save();
+        await embedImages();
+    }
+
+    async function Save() {
+        pdfBytes = await pdfDoc.save()
+        download(pdfBytes, "pdf-lib_image_embedding_example.pdf", "application/pdf");
+    }
+</script>
+
+</html>
