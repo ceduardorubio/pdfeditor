@@ -4,69 +4,273 @@
     <meta charset="utf-8" />
     <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <style>
+        *,
+         ::after,
+         ::before {
+            box-sizing: border-box;
+        }
+        
+        *:focus {
+            outline: none;
+        }
+        
+        html,
+        button {
+            scroll-behavior: smooth;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        button {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            color: #fff;
+            background-color: #343a40;
+            border-color: #343a40;
+            display: block;
+            width: 100%;
+        }
+        
+        button:hover {
+            color: #fff;
+            background-color: #23272b;
+            border-color: #1d2124;
+        }
+        
+        div {
+            position: relative;
+        }
+        
+        .center-center-content {
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+        
+        .right-center-content {
+            display: flex;
+            align-items: center;
+            justify-content: right
+        }
+        
+        .left-center-content {
+            display: flex;
+            align-items: center;
+            justify-content: left
+        }
+        
+        .h-center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .v-center-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
         .row {
             display: flex;
             flex-wrap: wrap;
-            width: 100%;
+            margin-right: -15px;
+            margin-left: -15px;
+            margin-top: 10px
         }
         
-        .col-50 {
-            flex: 50%;
+        .col {
+            position: relative;
+            padding-right: 15px;
+            padding-left: 15px;
+            flex-basis: 0;
+            -webkit-box-flex: 1;
+            flex-grow: 1;
+            max-width: 100%
         }
         
-        .h-90 {
-            height: 98vh;
+        .h-85 {
+            height: 85vh;
         }
-
-        .form-control{
+        
+        .form-control {
+            display: block;
             width: 100%;
-            border-radius: 3px;
-            border: 1px solid rgba(0,0,0,0.4);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        
+        .m-5 {
+            margin: 5px;
+        }
+        
+        .mt-2rem {
+            margin-top: 2rem;
+        }
+        
+        .mb-0 {
+            margin-bottom: 0;
         }
     </style>
 </head>
 
 <body>
-    <div class="row">
-        <div class="col-50">
-            updating ...
-            <label for="input_pdf">Seleccionar Documento de Pdf:</label>
-            <input id="input_pdf" class="form-control" type="file" />
-            <br>
-            <label for="input_png">Seleccionar Firma PNG:</label>
-            <input id="input_png" type="file" />
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h3>
+                            Herramienta para agregar Firma a PDF
+                        </h3>
+                    </div>
+                </div>
+                <div class="row mt-2rem">
+                    <div class="col">
+                        <label for="input_pdf">Seleccionar Documento de Pdf:</label>
+                        <input id="input_pdf" class="form-control m-5" type="file" />
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="input_png">Seleccionar Firma PNG:</label>
+                        <input id="input_png" class="form-control m-5" type="file" />
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button onclick="AgregarFirma()">Agregar Firma</button>
+                    </div>
+                    <div class="col">
+                        <button onclick="AgrandarFirma()">Agrandar Firma</button>
+                    </div>
+                    <div class="col">
+                        <button onclick="AchicarFirma()">Achicar Firma</button>
+                    </div>
+                </div>
 
-            <br>
-            <button onclick="AgregarFirma()">Agregar Firma</button>
 
-            <br>
-            <button onclick="IncrementarPagina()">Mover Firma a Pagina Siguiente</button>
-            <button onclick="DisminuirPagina()">Mover Firma a Pagina Previa</button>
 
-            <br>
-            <button onclick="AgrandarFirma()">Agrandar Firma</button>
-            <button onclick="AchicarFirma()">Achicar Firma</button>
+                <div class="row mt-2rem">
+                    <div class="col">
+                        <h3 class="mb-0 ">
+                            Mover Firma
+                        </h3>
+                    </div>
+                </div>
+                <hr>
 
-            <br>
-            <button onclick="MoverDerecha()">Mover Firma a la derecha</button>
-            <br>
-            <button onclick="MoverIzquierda()">Mover Firma a la izquierda</button>
-            <br>
-            <button onclick="MoverArriba()">Mover Firma hacia arriba</button>
-            <br>
-            <button onclick="MoverAbajo()">Mover Firma hacia abajo</button>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        <button onclick="MoverArriba()">hacia arriba</button>
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
 
-            <br>
-            <button onclick="SetFirma()">Fijar Firma</button>
+                <div class="row">
+                    <div class="col">
+                        <button onclick="IncrementarPagina()">a Pagina Siguiente</button>
+                    </div>
+                    <div class="col"></div>
+                    <div class="col">
+                        <button onclick="MoverIzquierda()">a la izquierda</button>
+                    </div>
+                    <div class="col"></div>
+                    <div class="col">
+                        <button onclick="MoverDerecha()">a la derecha</button>
+                    </div>
+                    <div class="col"></div>
+                </div>
 
-            <br>
-            <button onclick="Save()">Descargar Firma PDF</button>
+                <div class="row">
+                    <div class="col">
+                        <button onclick="DisminuirPagina()">a Pagina Previa</button>
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        <button onclick="MoverAbajo()">hacia abajo</button>
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
+
+                <div class="row mt-2rem">
+                    <div class="col">
+                        <button onclick="SetFirma()">Fijar Firma</button>
+                        <h4>
+                            [Para agregar una nueva firma presiona el boton de agregar firma despues de haber fijado la firma anterior]
+                        </h4>
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
+                <hr>
+
+                <div class="row" style="padding-top: 6rem;">
+                    <div class="col">
+                        <button onclick="Save()">Descargar PDF con Firma(s)</button>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <h4>
+                    PDF View
+                </h4>
+                <iframe style="box-sizing: border-box; width: 100%" class="h-85 "></iframe>
+            </div>
         </div>
-        <div class="col-50 ">
-            <iframe style="box-sizing: border-box; width: 100%" class="h-90 "></iframe>
+        <div class="row">
+            <div class="col">
+                <h5>
+                    cvx - 2022
+                </h5>
+            </div>
+            <div class="col"></div>
         </div>
     </div>
+
 
 
 </body>
