@@ -436,6 +436,7 @@
 
     async function createPdf() {
       pdfDoc = await PDFDocument.create();
+      await embedImages();
     }
 </script>
 
