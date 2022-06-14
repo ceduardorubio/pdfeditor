@@ -165,6 +165,9 @@
                             [para unir varios archivos pdfs, ingresa uno despues de otro]
                         </h5>
                     </div>
+                    <div class="col">
+                        <button onclick="createPdf()">Generar PDF vacio</button>
+                    </div>
                     <div class="col"></div>
                     <div class="col"></div>
                 </div>
@@ -283,7 +286,9 @@
 <script>
     let pdfBytes = null;
     const {
-        PDFDocument
+        PDFDocument,
+        StandardFonts, 
+        rgb
     } = PDFLib
 
     let pdfDoc = null;
@@ -426,6 +431,11 @@
     async function Save() {
         pdfBytes = await pdfDoc.save()
         download(pdfBytes, "pdf-lib_image_embedding_example.pdf", "application/pdf");
+    }
+
+
+    async function createPdf() {
+      pdfDoc = await PDFDocument.create();
     }
 </script>
 
