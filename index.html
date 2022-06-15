@@ -8,142 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="icon.png" />
-    <style>
-        *,
-         ::after,
-         ::before {
-            box-sizing: border-box;
-        }
-        
-        *:focus {
-            outline: none;
-        }
-        
-        html,
-        button {
-            scroll-behavior: smooth;
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        button {
-            display: inline-block;
-            font-weight: 400;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            border: 1px solid transparent;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: 0.25rem;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            color: #fff;
-            background-color: #0069d9;
-            border-color: #0062cc;
-            display: block;
-            width: 100%;
-        }
-        
-        button:hover {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-        
-        div {
-            position: relative;
-        }
-        
-        .center-center-content {
-            display: flex;
-            align-items: center;
-            justify-content: center
-        }
-        
-        .right-center-content {
-            display: flex;
-            align-items: center;
-            justify-content: right
-        }
-        
-        .left-center-content {
-            display: flex;
-            align-items: center;
-            justify-content: left
-        }
-        
-        .h-center-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .v-center-content {
-            display: flex;
-            align-items: center;
-        }
-        
-        .container {
-            width: 100%;
-            padding-right: 15px;
-            padding-left: 15px;
-            margin-right: auto;
-            margin-left: auto;
-        }
-        
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
-            margin-top: 10px
-        }
-        
-        .col {
-            position: relative;
-            padding-right: 15px;
-            padding-left: 15px;
-            flex-basis: 0;
-            -webkit-box-flex: 1;
-            flex-grow: 1;
-            max-width: 100%
-        }
-        
-        .h-85 {
-            height: 85vh;
-        }
-        
-        .form-control {
-            display: block;
-            width: 100%;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-        
-        .m-5 {
-            margin: 5px;
-        }
-        
-        .mt-2rem {
-            margin-top: 2rem;
-        }
-        
-        .mb-0 {
-            margin-bottom: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
@@ -153,20 +20,21 @@
                 <div class="row">
                     <div class="col">
                         <h3>
-                            Add Image(s) to  your PDF(s) File(s) - Everything in your browser
+                            Add Image(s) to your PDF(s) File(s) - Everything in your browser
                         </h3>
                     </div>
                 </div>
                 <div class="row mt-2rem">
                     <div class="col">
                         <label for="input_pdf">Select a Pdf file:</label>
-                        <input id="input_pdf" class="form-control m-5" type="file" />
+                        <input id="input_pdf" class="form-control" type="file" />
                         <h5>
                             [join multiple pdfs, add one after other]
                         </h5>
                     </div>
                     <div class="col">
-                        <button onclick="createPdf()">o Generate empty PDf</button>
+                        <label for="input_pdf">or Generate empty PDf:</label>
+                        <button onclick="createPdf()">Generate</button>
                     </div>
                 </div>
                 <div class="row">
@@ -276,193 +144,7 @@
             <div class="col"></div>
         </div>
     </div>
-
-
-
+    <script src="main.js"></script>
 </body>
-
-<script>
-    let pdfBytes = null;
-    const {
-        PDFDocument,
-        StandardFonts, 
-        rgb
-    } = PDFLib
-
-    let pdfDoc = null;
-    let pngImage = null;
-    let jpgImage = null;
-
-    let existingPdfBytes = null;
-    let pngImageBytes = null;
-    let jpgImageBytes = null;
-
-    let width = 200;
-    let height = 200;
-
-    let firmando = false;
-
-    let x1 = 90;
-    let y1 = 190;
-
-    let page1 = 0;
-
-    async function AgregarFirma() {
-        firmando = true;
-        x1 = 90;
-        y1 = 190;
-        page1 = 0;
-        await embedImages();
-    }
-
-    async function IncrementarPagina() {
-        page1++;
-        await embedImages();
-    }
-
-    async function DisminuirPagina() {
-        if (page1 > 0) page1--;
-        await embedImages();
-    }
-
-    async function AchicarFirma() {
-        width = width - 30;
-        await embedImages();
-    }
-
-    async function AgrandarFirma() {
-        width = width + 30;
-        await embedImages();
-    }
-
-    async function MoverAbajo() {
-        y1 = y1 - 30;
-        await embedImages();
-    }
-
-    async function MoverArriba() {
-        y1 = y1 + 30;
-        await embedImages();
-    }
-
-    async function MoverDerecha() {
-        x1 = x1 + 30;
-        await embedImages();
-    }
-
-    async function MoverIzquierda() {
-        x1 = x1 - 30;
-        await embedImages();
-    }
-
-
-    async function ResetContents() {
-        pdfDoc = await PDFDocument.load(existingPdfBytes);
-        if (pngImageBytes) {
-            pngImage = await pdfDoc.embedPng(pngImageBytes);
-            const pngDims = pngImage.scale(1);
-            let factor = width / pngDims.width;
-            height = pngDims.height * factor;
-        } else {
-            if(jpgImageBytes){
-                jpgImage = await pdfDoc.embedJpg(jpgImageBytes);
-                const jpgDims = jpgImage.scale(1);
-                let factor = width / jpgDims.width;
-                height = jpgDims.height * factor;
-            }
-        }
-    }
-
-    async function AppendPDFBytes(pdfBytes) {
-        if (existingPdfBytes) {
-            const newPDF = await PDFDocument.load(pdfBytes);
-            const copiedPagesA = await pdfDoc.copyPages(newPDF, newPDF.getPageIndices());
-            copiedPagesA.forEach((page) => pdfDoc.addPage(page));
-            existingPdfBytes = await pdfDoc.save();
-
-        } else {
-            existingPdfBytes = pdfBytes;
-        }
-    }
-
-    document.getElementById('input_pdf').addEventListener('change', function() {
-        var reader = new FileReader();
-        reader.onload = async function() {
-            let newPdfBytes = new Uint8Array(reader.result);
-            await AppendPDFBytes(newPdfBytes);
-            await embedImages();
-        }
-        reader.readAsArrayBuffer(this.files[0]);
-    }, false);
-
-    document.getElementById('input_png').addEventListener('change', function() {
-        var reader = new FileReader();
-        let type = null;
-        reader.onload = async function() {
-            if(type == "image/jpeg"){
-                jpgImageBytes = new Uint8Array(reader.result);
-            } else {
-                pngImageBytes = new Uint8Array(reader.result);
-            }
-        }
-
-        let img = this.files[0];
-        type = img.type;
-        reader.readAsArrayBuffer(img);
-    }, false);
-
-    async function embedImages() {
-        await ResetContents();
-        DrawOnPage(page1, x1, y1);
-        await UpdateViewer();
-    }
-
-
-    function DrawOnPage(page, x, y) {
-        if (pngImageBytes) {
-            pdfDoc.getPages()[page].drawImage(pngImage, {
-                x,
-                y,
-                width,
-                height
-            });
-        }
-        if(jpgImageBytes){
-            pdfDoc.getPages()[page].drawImage(jpgImage, {
-                x,
-                y,
-                width,
-                height
-            });
-        }
-    }
-
-    async function UpdateViewer() {
-        const pdfDataUri = await pdfDoc.saveAsBase64({
-            dataUri: true
-        });
-        var iframe = document.querySelectorAll('iframe')[0];
-        iframe.src = pdfDataUri;
-    }
-
-    async function SetFirma() {
-        firmando = false;
-        existingPdfBytes = await pdfDoc.save();
-        await embedImages();
-    }
-
-    async function Save() {
-        pdfBytes = await pdfDoc.save()
-        download(pdfBytes, "pdf-lib_image_embedding_example.pdf", "application/pdf");
-    }
-
-
-    async function createPdf() {
-        pdfDoc = await PDFDocument.create();
-        existingPdfBytes = await pdfDoc.save();
-        await embedImages();
-    }
-
-</script>
 
 </html>
