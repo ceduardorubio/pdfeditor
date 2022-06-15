@@ -367,7 +367,7 @@
             height = pngDims.height * factor;
         } else {
             if(jpgImageBytes){
-                jpgImage = await pdfDoc.embedJpg(pngImageBytes);
+                jpgImage = await pdfDoc.embedJpg(jpgImageBytes);
                 const jpgDims = pngImage.scale(1);
                 let factor = width / jpgDims.width;
                 height = jpgDims.height * factor;
