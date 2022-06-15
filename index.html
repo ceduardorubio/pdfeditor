@@ -435,8 +435,10 @@
 
 
     async function createPdf() {
-      pdfDoc = await PDFDocument.create();
-      await embedImages();
+        pdfDoc = await PDFDocument.create();
+        existingPdfBytes = await pdfDoc.save();
+        console.log("Empty PDF");
+        await embedImages();
     }
 </script>
 
