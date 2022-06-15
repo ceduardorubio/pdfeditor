@@ -153,7 +153,7 @@
                 <div class="row">
                     <div class="col">
                         <h3>
-                            Herramienta para agregar Firma a PDF
+                            Add Image to  PDF
                         </h3>
                     </div>
                 </div>
@@ -162,18 +162,18 @@
                         <label for="input_pdf">Seleccionar Documento de Pdf:</label>
                         <input id="input_pdf" class="form-control m-5" type="file" />
                         <h5>
-                            [para unir varios archivos pdfs, ingresa uno despues de otro]
+                            [join multiple pdfs, add one after other]
                         </h5>
                     </div>
                     <div class="col">
-                        <button onclick="createPdf()">Generar PDF vacio</button>
+                        <button onclick="createPdf()">o Generate empty PDf</button>
                     </div>
                     <div class="col"></div>
                     <div class="col"></div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="input_png">Seleccionar Firma PNG:</label>
+                        <label for="input_png">Select Image PNG / JPG:</label>
                         <input id="input_png" class="form-control m-5" type="file" />
                     </div>
                     <div class="col"></div>
@@ -181,13 +181,13 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button onclick="AgregarFirma()">Agregar Firma</button>
+                        <button onclick="AgregarFirma()">Append Image</button>
                     </div>
                     <div class="col">
-                        <button onclick="AgrandarFirma()">Agrandar Firma</button>
+                        <button onclick="AgrandarFirma()">Increase Image Size</button>
                     </div>
                     <div class="col">
-                        <button onclick="AchicarFirma()">Achicar Firma</button>
+                        <button onclick="AchicarFirma()">Decrease Image Size</button>
                     </div>
                 </div>
 
@@ -196,7 +196,7 @@
                 <div class="row mt-2rem">
                     <div class="col">
                         <h3 class="mb-0 ">
-                            Mover Firma
+                            Move Image
                         </h3>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     <div class="col"></div>
                     <div class="col"></div>
                     <div class="col">
-                        <button onclick="MoverArriba()">hacia arriba</button>
+                        <button onclick="MoverArriba()">Up</button>
                     </div>
                     <div class="col"></div>
                     <div class="col"></div>
@@ -215,27 +215,27 @@
 
                 <div class="row">
                     <div class="col">
-                        <button onclick="IncrementarPagina()">a Pagina Siguiente</button>
+                        <button onclick="IncrementarPagina()">to Next Page</button>
                     </div>
                     <div class="col"></div>
                     <div class="col">
-                        <button onclick="MoverIzquierda()">a la izquierda</button>
+                        <button onclick="MoverIzquierda()">Left</button>
                     </div>
                     <div class="col"></div>
                     <div class="col">
-                        <button onclick="MoverDerecha()">a la derecha</button>
+                        <button onclick="MoverDerecha()">Right</button>
                     </div>
                     <div class="col"></div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <button onclick="DisminuirPagina()">a Pagina Previa</button>
+                        <button onclick="DisminuirPagina()">to Previous Page</button>
                     </div>
                     <div class="col"></div>
                     <div class="col"></div>
                     <div class="col">
-                        <button onclick="MoverAbajo()">hacia abajo</button>
+                        <button onclick="MoverAbajo()">Down</button>
                     </div>
                     <div class="col"></div>
                     <div class="col"></div>
@@ -243,9 +243,9 @@
 
                 <div class="row mt-2rem">
                     <div class="col">
-                        <button onclick="SetFirma()">Fijar Firma</button>
+                        <button onclick="SetFirma()">Attach Image</button>
                         <h4>
-                            [Para agregar una nueva firma presiona el boton de agregar firma despues de haber fijado la firma anterior]
+                            [you can attach many images]
                         </h4>
                     </div>
                     <div class="col"></div>
@@ -255,7 +255,7 @@
 
                 <div class="row" style="padding-top: 6rem;">
                     <div class="col">
-                        <button onclick="Save()">Descargar PDF unido con Firma(s)</button>
+                        <button onclick="Save()">Download PDF</button>
                     </div>
                     <div class="col">
 
@@ -368,7 +368,7 @@
         } else {
             if(jpgImageBytes){
                 jpgImage = await pdfDoc.embedJpg(jpgImageBytes);
-                const jpgDims = pngImage.scale(1);
+                const jpgDims = jpgImage.scale(1);
                 let factor = width / jpgDims.width;
                 height = jpgDims.height * factor;
             }
