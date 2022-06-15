@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>CVX - PDF PNG SIGN</title>
+    <title>PDF EDITOR</title>
     <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,13 +153,13 @@
                 <div class="row">
                     <div class="col">
                         <h3>
-                            Add Image to  PDF
+                            Add Image(s) to  your PDF(s) File(s) - Everything in your browser
                         </h3>
                     </div>
                 </div>
                 <div class="row mt-2rem">
                     <div class="col">
-                        <label for="input_pdf">Seleccionar Documento de Pdf:</label>
+                        <label for="input_pdf">Select a Pdf file:</label>
                         <input id="input_pdf" class="form-control m-5" type="file" />
                         <h5>
                             [join multiple pdfs, add one after other]
@@ -168,8 +168,6 @@
                     <div class="col">
                         <button onclick="createPdf()">o Generate empty PDf</button>
                     </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -462,11 +460,9 @@
     async function createPdf() {
         pdfDoc = await PDFDocument.create();
         existingPdfBytes = await pdfDoc.save();
-        console.log("Empty PDF");
         await embedImages();
     }
 
-    console.log("ALLOW JPG");
 </script>
 
 </html>
