@@ -293,9 +293,11 @@
 
     let pdfDoc = null;
     let pngImage = null;
+    let jpgImage = null;
 
     let existingPdfBytes = null;
     let pngImageBytes = null;
+    let jpgImageBytes = null;
 
     let width = 200;
     let height = 200;
@@ -363,6 +365,13 @@
             const pngDims = pngImage.scale(1);
             let factor = width / pngDims.width;
             height = pngDims.height * factor;
+        } else {
+            if(jpgImageBytes){
+                jpgImage = await pdfDoc.embedJpg(pngImageBytes);
+                const jpgDims = pngImage.scale(1);
+                let factor = width / jpgDims.width;
+                height = jpgDims.height * factor;
+            }
         }
     }
 
@@ -390,10 +399,18 @@
 
     document.getElementById('input_png').addEventListener('change', function() {
         var reader = new FileReader();
+        let type = null;
         reader.onload = async function() {
-            pngImageBytes = new Uint8Array(reader.result);
+            if(type == "image/jpeg"){
+                jpgImageBytes = new Uint8Array(reader.result);
+            } else {
+                pngImageBytes = new Uint8Array(reader.result);
+            }
         }
-        reader.readAsArrayBuffer(this.files[0]);
+
+        let img = this.files[0];
+        type = img.type;
+        reader.readAsArrayBuffer(img);
     }, false);
 
     async function embedImages() {
@@ -406,6 +423,14 @@
     function DrawOnPage(page, x, y) {
         if (pngImageBytes) {
             pdfDoc.getPages()[page].drawImage(pngImage, {
+                x,
+                y,
+                width,
+                height
+            });
+        }
+        if(jpgImageBytes){
+            pdfDoc.getPages()[page].drawImage(jpgImage, {
                 x,
                 y,
                 width,
@@ -440,6 +465,8 @@
         console.log("Empty PDF");
         await embedImages();
     }
+
+    console.log("ALLOW JPG");
 </script>
 
 </html>
